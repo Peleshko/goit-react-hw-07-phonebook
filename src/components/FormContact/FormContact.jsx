@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import contactsActions from '../../redux/contacts/contacts-actions';
-import { getContacts } from '../../redux/contacts/contacts-selectors';
+import * as operations from '../../redux/contacts/contacts-operations';
+import { getItems } from '../../redux/contacts/contacts-selectors';
 import s from './FormContact.module.css';
 
 function FormContact() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  const contacts = useSelector(getContacts);
+  const items = useSelector(getItems);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -19,9 +19,11 @@ function FormContact() {
       case 'name':
         setName(value);
         break;
+
       case 'number':
         setNumber(value);
         break;
+
       default:
         return;
     }
@@ -29,9 +31,12 @@ function FormContact() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    contacts.contacts.map(contact => contact.name).includes(name)
+
+    const duplicateValidator = name => items.find(item => item.name === name);
+
+    duplicateValidator(name)
       ? toast.warn(`${name} is already in your phonebook`)
-      : dispatch(contactsActions.addContacts({ name, number }));
+      : dispatch(operations.addContact({ name, number }));
     resetState();
   };
 

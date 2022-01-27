@@ -1,24 +1,42 @@
-import { combineReducers } from 'redux';
-import { createReducer } from '@reduxjs/toolkit';
-import contactsActions from './contacts-actions';
+import { createSlice } from '@reduxjs/toolkit';
+import * as actions from './contacts-actions';
+import {
+  fetchContacts,
+  deleteContact,
+  addContact,
+} from './contacts-operations';
 
-const initialState = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
-
-const contacts = createReducer(initialState, {
-  [contactsActions.addContacts]: (state, { payload }) => {
-    return [...state, payload];
+const contactsSlice = createSlice({
+  name: 'contacts',
+  initialState: { items: [], filter: '', error: null },
+  reducers: {
+    [actions.filterContact]: (state, { payload }) => {
+      state.filter = payload;
+    },
   },
-  [contactsActions.deleteContacts]: (state, { payload }) =>
-    state.filter(({ id }) => id !== payload),
+  extraReducers: {
+    [fetchContacts.fulfilled]: (state, { payload }) => {
+      state.items = payload;
+    },
+    [addContact.fulfilled]: (state, { payload }) => {
+      state.items = [...state.items, payload];
+    },
+
+    [deleteContact.fulfilled]: (state, { payload }) => {
+      state.items = state.items.filter(({ id }) => id !== payload);
+    },
+    [fetchContacts.rejected]: (state, { payload }) => {
+      state.error = payload;
+    },
+    [addContact.rejected]: (state, { payload }) => {
+      state.error = payload;
+    },
+    [deleteContact.rejected]: (state, { payload }) => {
+      state.error = payload;
+    },
+  },
 });
 
-const filter = createReducer('', {
-  [contactsActions.changeFilter]: (_, { payload }) => payload,
-});
+const contactsReducer = contactsSlice.reducer;
 
-export default combineReducers({ contacts, filter });
+export default contactsReducer;
