@@ -4,10 +4,9 @@ import { FETCH, ADD, DELETE } from './contacts-types';
 
 export const fetchContacts = createAsyncThunk(
   FETCH,
-  async (_, { rejectWithValue }) => {
+  async (_value, { rejectWithValue }) => {
     try {
-      const contacts = await contactsAPI.fetchContacts();
-      return contacts;
+      return await contactsAPI.fetchContacts();
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -18,8 +17,7 @@ export const addContact = createAsyncThunk(
   ADD,
   async ({ name, number }, { rejectWithValue }) => {
     try {
-      const contact = await contactsAPI.addContact(name, number);
-      return contact;
+      return await contactsAPI.addContact(name, number);
     } catch (error) {
       return rejectWithValue(error.message);
     }

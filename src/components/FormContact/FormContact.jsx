@@ -12,21 +12,8 @@ function FormContact() {
   const items = useSelector(getItems);
   const dispatch = useDispatch();
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-
-      case 'number':
-        setNumber(value);
-        break;
-
-      default:
-        return;
-    }
+  const handleChange = ({ target: { name, value } }) => {
+    name === 'name' ? setName(value) : setNumber(value);
   };
 
   const handleSubmit = e => {

@@ -1,5 +1,3 @@
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import * as operations from '../../redux/contacts/contacts-operations';
@@ -17,12 +15,10 @@ const ContactList = () => {
       {items.map(({ id, name, number }) => (
         <ContactListItem
           key={id}
+          id={id}
           contactName={name}
           contactNumber={number}
-          onClickDeleteContact={() => {
-            dispatch(operations.deleteContact(id));
-            toast('Deleted', { autoClose: 1000 });
-          }}
+          onClickDeleteContact={() => dispatch(operations.deleteContact(id))}
         />
       ))}
     </ul>
